@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+
+  # This will be our target
+  juice-shop:
+    image: bkimminich/juice-shop
+    ports:
+      - 3000:3000
+    networks:
+      - public
+      - private
+
+  # Target number 2
+  web-dvwa:
+    image: vulnerables/web-dvwa
+    ports:
+      - 8000:80
+    networks:
+      - private
+
+  # This is our attacker system
+  kali:
+    build: ./kali
+    command: tail -f /dev/null
+    networks:
+      - public
+
+networks:
+  public:
+    ipam:
+      driver: default
+      config:
+        - subnet: 100.126.0.0/27
+  private:
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.10.10.0/27
